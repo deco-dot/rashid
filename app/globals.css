@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap');
+
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --accent: #89fb2b;
+  --dark: #080d09;
+  --card: #111714;
+  --border: rgba(255,255,255,0.07);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background-color: #080d09;
+  color: #f0f4f1;
+}
+
+/* ── NAME ZOOM-IN (no letter-spacing — fixes stretched look) ── */
+@keyframes nameZoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.72) translateY(24px);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.03) translateY(-3px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ── SLIDE UP ── */
+@keyframes slideUp {
+  0%   { opacity: 0; transform: translateY(28px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── FADE IN ── */
+@keyframes fadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ── BACKGROUND SLIDESHOW FADE ── */
+@keyframes bgFadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Animation utilities */
+.animate-name-zoom {
+  animation: nameZoomIn 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-slide-up {
+  animation: slideUp 0.65s ease-out both;
+}
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out both;
+}
+.animate-bg-fade {
+  animation: bgFadeIn 1s ease-in-out both;
+}
+
+/* Stagger delays */
+.delay-100  { animation-delay: 0.10s; }
+.delay-200  { animation-delay: 0.20s; }
+.delay-300  { animation-delay: 0.30s; }
+.delay-400  { animation-delay: 0.40s; }
+.delay-500  { animation-delay: 0.50s; }
+.delay-600  { animation-delay: 0.60s; }
+.delay-700  { animation-delay: 0.70s; }
+.delay-800  { animation-delay: 0.80s; }
+.delay-1000 { animation-delay: 1.00s; }
+
+/* ── CARD HOVER ── */
+.card-hover {
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(137,251,43,0.25) !important;
+}
+
+/* ── BUTTON PRESS ── */
+.btn-press {
+  transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* ── SYNE FONT ── */
+.font-syne {
+  font-family: 'Syne', sans-serif;
+}
+
+/* ── CUSTOM SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #080d09; }
+::-webkit-scrollbar-thumb { background: #89fb2b; border-radius: 3px; }
