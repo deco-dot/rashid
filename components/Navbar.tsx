@@ -1,6 +1,7 @@
 "use client";
+
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
@@ -11,13 +12,12 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
 
   return (
     <>
       {/* ── DESKTOP: Side Rail ── */}
-      <aside className="fixed left-6 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col items-center gap-1 py-4 px-2 rounded-2xl bg-white border border-slate-100 shadow-sm">
+      <aside className="fixed left-6 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col items-center gap-2 py-4 px-2 rounded-2xl bg-[#ebebeb] border border-gray-900/60 shadow-xl">
         {navLinks.map((link) => {
           const isActive = pathname === link.path;
           return (
@@ -25,19 +25,17 @@ export default function Navbar() {
               key={link.path}
               href={link.path}
               title={link.name}
-              className={`group relative w-9 h-9 flex items-center justify-center rounded-xl transition-colors duration-200 ${
+              className={`group relative w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 ${
                 isActive
-                  ? "bg-[#89fb2b] text-black"
-                  : "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
+                  ? "bg-[#9ffb2b] text-black font-semibold"
+                  : "text-gray-500 hover:bg-white/5 hover:text-white"
               }`}
             >
-              {/* Icon abbreviation */}
-              <span className="text-[10px] font-black uppercase tracking-wider">
+              <span className="text-[11px] font-medium tracking-wider uppercase">
                 {link.name.slice(0, 2)}
               </span>
 
-              {/* Tooltip label */}
-              <span className="pointer-events-none absolute left-full ml-3 px-2.5 py-1 rounded-lg bg-slate-900 text-white text-[10px] font-bold uppercase tracking-wider whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+              <span className="pointer-events-none absolute left-full ml-3 px-3 py-1.5 rounded-lg bg-gray-900 text-gray-200 text-xs font-medium border border-gray-800 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 shadow-md">
                 {link.name}
               </span>
             </Link>
@@ -46,24 +44,27 @@ export default function Navbar() {
       </aside>
 
       {/* ── MOBILE: Bottom Bar ── */}
-      <nav className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-4 py-2 rounded-2xl bg-white border border-slate-100 shadow-md">
-        {navLinks.map((link) => {
-          const isActive = pathname === link.path;
-          return (
-            <Link
-              key={link.path}
-              href={link.path}
-              className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-colors duration-200 ${
-                isActive
-                  ? "bg-[#89fb2b] text-black"
-                  : "text-slate-400 hover:text-slate-900"
-              }`}
-            >
-              {link.name.slice(0, 2)}
-            </Link>
-          );
-        })}
-      </nav>
+      {/* High-priority isolated layout container */}
+      <div className="lg:hidden fixed bottom-6 left-0 right-0 w-full z-[9999] isolate flex justify-center items-center pointer-events-none">
+        <nav className="pointer-events-auto w-[320px] min-w-[320px] max-w-[320px] h-[54px] min-h-[54px] flex items-center justify-between gap-1 p-1.5 rounded-2xl bg-[#111] border border-gray-900/80 shadow-2xl backdrop-blur-md appearance-none">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.path;
+            return (
+              <Link
+                key={link.path}
+                href={link.path}
+                className={`w-[74px] min-w-[74px] max-w-[74px] h-[42px] min-h-[42px] flex items-center justify-center rounded-xl text-xs font-medium tracking-wider uppercase transition-all duration-150 whitespace-nowrap select-none border border-transparent ${
+                  isActive
+                    ? "bg-[#9ffb2b] text-black font-semibold shadow-inner"
+                    : "text-gray-500 hover:text-gray-200"
+                }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
     </>
   );
 }

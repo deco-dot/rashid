@@ -460,7 +460,7 @@ export default function Home() {
               <li key={l}><a href={`#${l.toLowerCase()}`}>{l}</a></li>
             ))}
           </ul></nav>
-          <a href="#contact" className="btn-hire">Hire Me</a>
+          <a href="/contact" className="btn-hire">Hire Me</a>
         </div>
       </header>
 

@@ -31,8 +31,9 @@ export default function RootLayout({
       className={`${inter.variable} ${syne.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#050505] text-white">
-        {children}
         <PageNav />
+        {children}
+        
       </body>
     </html>
   );
