@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
+
 interface Certificate {
   id: number;
   title: string;
@@ -104,6 +105,7 @@ const CERTIFICATES: Certificate[] = [
     link: "/certificates/gavc.png",
   },
 ];
+
 
 const CATEGORIES = ["All", "SEO", "Social Media", "Ads", "Marketing"];
 
