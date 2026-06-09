@@ -121,11 +121,11 @@ export default function ContactPage() {
           {/* Quick Links Footer */}
           <div className="border-t border-gray-900 mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              <a href="mailto:hello@rashidirfankc.com" className="hover:text-white transition-colors">
-                hello@rashidirfankc.com
+              <a href="mailto:rashidirfankc2006@gmail.com" className="hover:text-white transition-colors">
+                rashidirfankc2006@gmail.com
               </a>
-              <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                +91 98765 43210
+              <a href="https://wa.me/9195446433" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                +91 95446 433
               </a>
             </div>
             

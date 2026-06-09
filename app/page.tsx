@@ -724,8 +724,8 @@ export default function Home() {
                 </p>
                 <div className="contact-items">
                   {[
-                    {icon:"📧",label:"Email",value:"hello@rashidirfankc.com",href:"mailto:hello@rashidirfankc.com"},
-                    {icon:"💬",label:"WhatsApp",value:"+91 98765 43210",href:"https://wa.me/919876543210"},
+                    {icon:"📧",label:"Email",value:"rashidirfankc2006@gmail.com",href:"mailto:rashidirfankc2006@gmail.com"},
+                    {icon:"💬",label:"WhatsApp",value:"+91 95446 433",href:"https://wa.me/9195446433"},
                     {icon:"📍",label:"Location",value:"Kerala, India · Remote",href:"#"},
                   ].map(item => (
                     <div key={item.label} className="contact-item">

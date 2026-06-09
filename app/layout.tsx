@@ -17,7 +17,7 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://yourdomain.com"), // Replace with your actual live domain URL
+  metadataBase: new URL("https://rashidirfan.in"), // Replace with your actual live domain URL
   title: {
     default: "Rashid Irfan KC | Best Digital Marketing Freelancer in Kerala",
     template: "%s | Rashid Irfan KC",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Rashid Irfan KC | Best Digital Marketing Freelancer in Kerala",
     description: "Partner with the top digital marketing strategist and consultant in Kerala. Scale organic reach with cost-effective SEO and paid growth campaigns.",
-    url: "https://yourdomain.com", // Replace with your actual live domain URL
+    url: "https://rashidirfan.in", // Replace with your actual live domain URL
     siteName: "Rashid Irfan KC Portfolio",
     images: [
       {
