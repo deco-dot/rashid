@@ -703,7 +703,7 @@ export default function Home() {
             <span className="section-label reveal">Tools I Use</span>
             <h2 className="section-heading reveal" style={{fontSize:"1.8rem"}}>Platforms & Technologies</h2>
             <div className="tools-pills reveal">
-              {["Google Search Console","Google Analytics 4","SEMrush","Ahrefs","Canva","Meta Ads Manager","Google Ads","Mailchimp","Notion","WordPress","HubSpot","Buffer","Zapier"].map(tool => (
+              {["Google Search Console","Google Analytics 4","SEMrush","Ahrefs","Canva","Meta Ads Manager","Google Ads","Mailchimp","WordPress","HubSpot"].map(tool => (
                 <span key={tool} className="tool-pill">{tool}</span>
               ))}
             </div>

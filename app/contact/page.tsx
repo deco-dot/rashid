@@ -64,7 +64,7 @@ export default function ContactPage() {
                 <input
                   name="phone"
                   type="tel"
-                  placeholder="+91 98765 43210"
+                  placeholder="+91 95446 43353"
                   className="w-full bg-[#1a201d] text-white placeholder:text-gray-600 px-4 py-3 rounded-xl text-sm border border-gray-800 focus:border-[#9ffb2b] focus:outline-none transition-colors"
                 />
               </div>
@@ -124,8 +124,8 @@ export default function ContactPage() {
               <a href="mailto:rashidirfankc2006@gmail.com" className="hover:text-white transition-colors">
                 rashidirfankc2006@gmail.com
               </a>
-              <a href="https://wa.me/9195446433" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                +91 95446 433
+              <a href="https://wa.me/919544643353" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                +91 95446 43353
               </a>
             </div>
             
