@@ -2,40 +2,53 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 interface SlideItem {
-  id: number;
+  id: string;
   image: string;
   text: string;
 }
 
-const slides: SlideItem[] = [
-  { id: 1, image: '/projects/1.png', text: 'Project 1' },
-  { id: 2, image: '/projects/2.png', text: 'Project 2' },
-  { id: 3, image: '/projects/3.png', text: 'Project 3' },
-  { id: 4, image: '/projects/4.png', text: 'Project 4' },
-  { id: 5, image: '/projects/5.png', text: 'Project 5' },
-  { id: 6, image: '/projects/6.png', text: 'Project 6' },
-  { id: 7, image: '/projects/7.png', text: 'Project 7' },
-  { id: 8, image: '/projects/8.png', text: 'Project 8' },
-  { id: 9, image: '/projects/9.png', text: 'Project 9' },
-  { id: 10, image: '/projects/10.png', text: 'Project 10' },
-  { id: 11, image: '/projects/11.png', text: 'Project 11' },
-  { id: 12, image: '/projects/12.png', text: 'Project 12' },
-  { id: 13, image: '/projects/13.png', text: 'Project 13' },
-  { id: 14, image: '/projects/14.png', text: 'Project 14' }
-];
-
 export default function ProjectCarousel() {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [slides, setSlides] = useState<SlideItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const docRef = doc(db, "content", "main");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data().projects) {
+          const rawProjects = docSnap.data().projects;
+          const mappedSlides = rawProjects
+            .filter((p: any) => p.image) // Only include projects with images
+            .map((p: any) => ({
+              id: p.id,
+              image: p.image,
+              text: p.title
+            }));
+          setSlides(mappedSlides);
+        }
+      } catch (err) {
+        console.error("Failed to load projects", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
     const timer = setInterval(() => {
       handleNext();
     }, 5000); 
 
     return () => clearInterval(timer);
-  }, [currentIndex]);
+  }, [currentIndex, slides.length]);
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
@@ -46,6 +59,7 @@ export default function ProjectCarousel() {
   };
 
   const handleDragEnd = (_event: any, info: PanInfo) => {
+    if (slides.length <= 1) return;
     const swipeThreshold = 40; 
     if (info.offset.x < -swipeThreshold) {
       handleNext(); 
@@ -53,6 +67,14 @@ export default function ProjectCarousel() {
       handlePrev(); 
     }
   };
+
+  if (loading) {
+    return <div className="w-full h-[100dvh] bg-black flex items-center justify-center text-white">Loading projects...</div>;
+  }
+
+  if (slides.length === 0) {
+    return <div className="w-full h-[100dvh] bg-black flex items-center justify-center text-white text-xl">No projects found. Add them in the admin panel.</div>;
+  }
 
   return (
     <div className="relative w-full h-[100dvh] bg-black flex flex-col justify-between items-center text-white overflow-hidden select-none">

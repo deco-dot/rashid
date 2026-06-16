@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { db } from "@/lib/firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 interface BlogPost {
-  id: number;
+  id: string;
   title: string;
   excerpt: string;
   date: string;
@@ -12,144 +14,46 @@ interface BlogPost {
   content: string[];
 }
 
-const ALL_POSTS: BlogPost[] = [
-  {
-    id: 1,
-    title: "How to Scale Google Ads Budgets Safely Without Dropping Your ROI",
-    excerpt: "A practical approach to increasing your ad spend smoothly by 10% to 15% intervals, keeping client conversion costs stable.",
-    date: "Jun 2026",
-    category: "Paid Ads",
-    readTime: "5 min read",
-    content: [
-      "When you want to increase leads from Google Ads, simply doubling your budget overnight can confuse the smart bidding algorithm and cause your cost-per-acquisition to spike. Instead, a scalable workflow requires a controlled approach.",
-      "The safest method is to scale your budgets by 10% to 15% every three to five days. This gradual approach allows the machine learning algorithm to find expanded audience pools without leaving its learning phase.",
-      "Additionally, keep a close eye on your search lost IS (budget) metrics. If your campaigns are regularly dropping visibility due to restricted daily pacing, increasing capital directly on those exact configurations will generate almost immediate lead adjustments."
-    ]
-  },
-  {
-    id: 2,
-    title: "A Simple Guide to Website Speed and Google SEO Rankings",
-    excerpt: "Why clean code architectures, optimized layouts, and image compression directly dictate your search placement on mobile browsers.",
-    date: "May 2026",
-    category: "SEO",
-    readTime: "7 min read",
-    content: [
-      "Google prioritizes fast websites that provide clean, fast interactions for users. If your web layout shifts significantly while loading images, or takes more than three seconds to display content, your rankings will inevitably slide.",
-      "To optimize this effectively, make sure you are capitalizing on modern component strategies. Next.js natively assists with this by optimizing font loading distributions and handling code splitting efficiently out of the box.",
-      "Always compress high-resolution image assets into next-generation formats like WebP or AVIF before loading them to production servers. A faster site keeps visitors engaged longer, reducing your bounce rate and directly signal boosting your domain authority."
-    ]
-  },
-  {
-    id: 3,
-    title: "The Local SEO Blueprint: Dominating Regional Maps and Search Results",
-    excerpt: "How local businesses can optimize map profiles, structure localized landing pages, and capture high-intent regional buyers.",
-    date: "May 2026",
-    category: "SEO",
-    readTime: "6 min read",
-    content: [
-      "For regional businesses, local search visibility is often the highest converting organic channel available. Capturing users looking for immediate solutions nearby requires an explicit structure.",
-      "Ensure your Google Business Profile is thoroughly detailed, matching exact name, address, and phone details across all primary digital directories. Consistently acquiring authentic reviews serves as a direct ranking signal for map packs.",
-      "On your website, build dedicated landing pages for localized terms. Structuring helpful local content and embedding dynamic maps ensures Google recognizes your proximity authority."
-    ]
-  },
-  {
-    id: 4,
-    title: "How to Build a High-Converting Digital Marketing Strategy",
-    excerpt: "Stop wasting your monthly ad budget on empty clicks. Learn how to align high-intent target audiences with high-performance landing pages.",
-    date: "Apr 2026",
-    category: "Marketing",
-    readTime: "4 min read",
-    content: [
-      "High-performance digital marketing isn't about collecting massive volumes of cheap views; it is about building clean conversion pipelines that transform strangers into valuable client accounts.",
-      "Start by mapping user intent. A searcher typing a precise, high-intent phrase requires a streamlined landing page focused exclusively on answering that exact query with zero navigation distractions.",
-      "Minimize conversion friction by shortening contact forms, stating clear unique value propositions above the fold, and establishing trust instantly via client case studies."
-    ]
-  },
-  {
-    id: 5,
-    title: "Mastering Meta Ads: Broad Targeting Frameworks That Actually Convert",
-    excerpt: "Moving past over-segmented interest pools. Why letting social ad algorithms analyze creative performance leads to sustainable costs.",
-    date: "Mar 2026",
-    category: "Paid Ads",
-    readTime: "8 min read",
-    content: [
-      "Micro-managing granular audience interests inside social ad builders often limits delivery scalability and raises overall CPM costs unnecessarily over long horizons.",
-      "Modern machine learning systems perform exceptionally well when given broader structural freedom. Trusting broad targeting setups and focusing your primary energy on creative asset testing remains the current gold standard.",
-      "Your ad copy and video hooks act as the primary filtering mechanism. Let the platform analyze behavioral interactions to deliver your messaging straight to natural buyer profiles."
-    ]
-  },
-  {
-    id: 6,
-    title: "Writing Ad Copy That Converts: The Hook, Story, and Offer Formula",
-    excerpt: "Break down the psychological framework behind high-performing ad creatives that capture attention and drive user action.",
-    date: "Mar 2026",
-    category: "Paid Ads",
-    readTime: "5 min read",
-    content: [
-      "Great ad copy doesn't read like an encyclopedia; it reads like a direct solution to an active frustration. To convert cold traffic, your messaging must instantly disrupt the user's scroll.",
-      "Start with a strong hook that highlights a common problem or shatters a popular myth. Follow up with a brief story or data point that builds authority and shows empathy for the reader's situation.",
-      "Conclude with a single, clear call to action. Tell the user exactly what to do next, whether it is downloading a guide or booking a strategy call, reducing any mental hesitation."
-    ]
-  },
-  {
-    id: 7,
-    title: "The Power of Negative Keywords in Google Ads Search Campaigns",
-    excerpt: "Stop bleeding your budget on irrelevant searches. Learn how to trim poor search terms to instantly improve click-through rates.",
-    date: "Feb 2026",
-    category: "Paid Ads",
-    readTime: "4 min read",
-    content: [
-      "If you aren't actively managing your negative keyword list, you are giving Google permission to waste your marketing budget on entirely unrelated search intent.",
-      "Regularly review your search terms report to identify low-intent or irrelevant phrases. Adding these as negative keywords prevents your ads from appearing to audiences who have no intention of buying.",
-      "This process quickly increases your overall campaign click-through rate (CTR) and quality score, which reduces your average cost-per-click over time."
-    ]
-  },
-  {
-    id: 8,
-    title: "An Introduction to Google Analytics 4 (GA4) for Modern Businesses",
-    excerpt: "Demystifying GA4 events, custom conversion tracking, and user journeys to accurately measure digital marketing performance.",
-    date: "Jan 2026",
-    category: "Marketing",
-    readTime: "6 min read",
-    content: [
-      "Moving away from traditional pageviews, modern analytics tools focus heavily on custom user event tracking to build a clearer picture of web interaction paths.",
-      "Setting up standard tracking parameters correctly allows you to see exactly where users drop off inside your sales funnels or contact form flows.",
-      "Utilize these insights to confidently optimize your landing page structures, focusing your energy on high-performing traffic sources."
-    ]
-  },
-  {
-    id: 9,
-    title: "Why Content Marketing is a Long-Term Asset for Organic Growth",
-    excerpt: "Building an authority-driven content archive that attracts high-value organic traffic month after month without ad spend.",
-    date: "Jan 2026",
-    category: "Marketing",
-    readTime: "7 min read",
-    content: [
-      "While paid ads offer immediate market feedback, an authority-driven content strategy builds a permanent digital asset that keeps producing value long after production ends.",
-      "Focus on answering specific, detailed questions that your target clients frequently ask during standard onboarding or sales conversations.",
-      "Consistently publishing helpful, high-quality answers signals deep topical expertise to search engines, steadily growing your organic search traffic over time."
-    ]
-  },
-  {
-    id: 10,
-    title: "Understanding E-E-A-T and Why Google Values Real Expertise",
-    excerpt: "How to optimize your website content to satisfy Google's strict Experience, Expertise, Authoritativeness, and Trustworthiness guidelines.",
-    date: "Dec 2025",
-    category: "SEO",
-    readTime: "5 min read",
-    content: [
-      "Google wants to ensure that the content ranking at the top of its search results is written by trustworthy creators with verifiable real-world experience.",
-      "To build strong trust signals, include detailed author biographies on your articles, display professional certifications, and back up claims with credible external links.",
-      "Focusing heavily on transparency and factual accuracy protects your website from algorithmic ranking drops while establishing deep credibility with your target audience."
-    ]
-  }
-];
-
 export default function BlogPage() {
-  const [selectedId, setSelectedId] = useState<number>(1);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileReadingMode, setMobileReadingMode] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
 
-  const currentPost = ALL_POSTS.find((p) => p.id === selectedId) || ALL_POSTS[0];
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "blogs"));
+        const blogsData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as BlogPost[];
+        
+        // Sort by createdAt descending if it exists
+        blogsData.sort((a: any, b: any) => (b.createdAt || 0) - (a.createdAt || 0));
+        
+        setPosts(blogsData);
+        if (blogsData.length > 0) {
+          setSelectedId(blogsData[0].id);
+        }
+      } catch (err) {
+        console.error("Error fetching blogs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlogs();
+  }, []);
+
+  const currentPost = posts.find((p) => p.id === selectedId) || posts[0];
+
+  if (loading) {
+    return <div className="w-full h-screen bg-[#050505] flex items-center justify-center text-white">Loading blogs...</div>;
+  }
+
+  if (posts.length === 0) {
+    return <div className="w-full h-screen bg-[#050505] flex items-center justify-center text-white">No blog posts found.</div>;
+  }
 
   return (
     <div className="w-full h-screen overflow-hidden bg-[#050505] text-gray-300 font-sans antialiased selection:bg-[#9ffb2b] selection:text-black relative">
@@ -197,7 +101,7 @@ export default function BlogPage() {
 
             {/* Crucial fix: explicitly sets a responsive height boundary and forces vertical overflow scroll */}
             <div className="h-[calc(100vh-220px)] lg:h-[calc(100vh-240px)] overflow-y-auto pr-2 py-4 space-y-3 blog-scroll-area shrink-0 pb-16">
-              {ALL_POSTS.map((post) => {
+              {posts.map((post) => {
                 const isSelected = post.id === selectedId;
                 return (
                   <button

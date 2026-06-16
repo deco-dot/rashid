@@ -1,11 +1,34 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const [content, setContent] = useState<{
+    mainImage: string;
+    projects: { id: string; cat: string; title: string; result: string; tags: string[]; image?: string }[];
+  } | null>(null);
 
   useEffect(() => {
+    // Fetch content data from Firebase
+    const fetchContent = async () => {
+      try {
+        const docRef = doc(db, "content", "main");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setContent(docSnap.data() as any);
+        } else {
+          setContent({ mainImage: "", projects: [] });
+        }
+      } catch (err) {
+        console.error('Error fetching content from Firebase:', err);
+        setContent({ mainImage: "", projects: [] });
+      }
+    };
+    fetchContent();
+
     const t = setTimeout(() => setLoaded(true), 320);
     const onScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -314,6 +337,14 @@ export default function Home() {
           padding: 4px 10px; border-radius: 4px;
           background: rgba(255,255,255,0.04); font-size: 11px; color: #666;
         }
+        .work-img-wrap {
+          width: 100%; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; margin-bottom: 20px;
+          background: rgba(255,255,255,0.04);
+        }
+        .work-img-wrap img {
+          width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;
+        }
+        .work-card:hover .work-img-wrap img { transform: scale(1.05); }
 
         /* ── PROCESS ── */
         .process-grid {
@@ -504,7 +535,7 @@ export default function Home() {
     
     {/* Raw profile asset with all bounding boxes completely stripped */}
     <img 
-      src="/photo.png" 
+      src={content?.mainImage || "/photo.png"} 
       alt="Rashid Irfan KC" 
       className="w-full h-auto object-contain block mix-blend-normal transform transition-transform duration-500 hover:scale-[1.02]"
     />
@@ -615,24 +646,25 @@ export default function Home() {
             <span className="section-label reveal">Portfolio</span>
             <h2 className="section-heading reveal">Recent work</h2>
             <div className="work-grid">
-              {[
-                {cat:"SEO",title:"Local Restaurant SEO",result:"+180% organic traffic in 3 months",tags:["On-page SEO","Google My Business","Local Keywords"]},
-                {cat:"Social Media",title:"Clothing Brand Instagram",result:"0 → 2,400 followers in 60 days",tags:["Instagram","Reels Strategy","Content Calendar"]},
-                {cat:"Content",title:"EdTech Blog Strategy",result:"12 articles · 5,000 monthly readers",tags:["Blog Writing","Keyword Research","SEO"]},
-                {cat:"Email",title:"E-commerce Email Campaign",result:"38% open rate · 12% click-through",tags:["Mailchimp","Segmentation","Automation"]},
-                {cat:"Ads",title:"Real Estate Google Ads",result:"₹15 cost-per-lead · 22 leads/month",tags:["Google Ads","Search Campaigns","Landing Page"]},
-                {cat:"Strategy",title:"Coaching Business Launch",result:"Full strategy · 3 clients in week 1",tags:["Brand Voice","Multi-channel","Content Plan"]},
-              ].map((p,i) => (
-                <div key={p.title} className="work-card reveal" style={{transitionDelay:`${i*0.07}s`}}>
+              {(content?.projects || []).map((p: any, i: number) => (
+                <div key={p.title + i} className="work-card reveal" style={{transitionDelay:`${i*0.07}s`}}>
+                  {p.image && (
+                    <div className="work-img-wrap">
+                      <img src={p.image} alt={p.title} />
+                    </div>
+                  )}
                   <span className="work-cat">{p.cat}</span>
                   <div className="work-title">{p.title}</div>
                   <p className="work-result">{p.result}</p>
                   <div className="work-tags">
-                    {p.tags.map(t => <span key={t} className="work-tag">{t}</span>)}
+                    {p.tags?.map((t: string) => <span key={t} className="work-tag">{t}</span>)}
                   </div>
                 </div>
               ))}
             </div>
+            {content?.projects?.length === 0 && (
+              <p className="text-gray-500 text-center mt-10">No projects to display.</p>
+            )}
           </div>
         </section>
 

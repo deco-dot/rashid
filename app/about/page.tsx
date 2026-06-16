@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 
 interface Certificate {
@@ -113,9 +115,22 @@ export default function About() {
   const [loaded, setLoaded] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedId, setSelectedId] = useState<number>(1);
+  const [mainImage, setMainImage] = useState<string>("");
 
   useEffect(() => {
     setLoaded(true);
+    const fetchContent = async () => {
+      try {
+        const docRef = doc(db, "content", "main");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data().mainImage) {
+          setMainImage(docSnap.data().mainImage);
+        }
+      } catch (err) {
+        console.error("Failed to load main image", err);
+      }
+    };
+    fetchContent();
   }, []);
 
   const filtered = activeFilter === "All" ? [...CERTIFICATES] : CERTIFICATES.filter((c) => c.category === activeFilter);
@@ -142,7 +157,7 @@ export default function About() {
             {/* Profile image container - scaled down on small heights to prevent overflow */}
             <div className="w-24 h-24 sm:w-32 sm:h-32 lg:w-full lg:h-auto max-w-xs mx-auto lg:mx-0 shrink-0">
               <img
-                src="/photo.png"
+                src={mainImage || "/photo.png"}
                 alt="Rashid Irfan KC"
                 className="w-full h-full lg:h-auto object-contain block rounded-full lg:rounded-none"
               />
