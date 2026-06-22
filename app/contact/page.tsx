@@ -30,7 +30,7 @@ export default function ContactPage() {
           
           <form
             className="space-y-6"
-            action="https://formspree.io/f/mojzeayk"
+            action="https://formspree.io/f/mvznlwkv"
             method="POST"
           >
             {/* Name and Email */}

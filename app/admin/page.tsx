@@ -37,7 +37,15 @@ export default function AdminPage() {
 
         // Fetch blogs
         const blogsSnap = await getDocs(blogsColRef);
-        const blogsData = blogsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const blogsData = blogsSnap.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            // Convert existing database arrays back to strings for seamless editing
+            content: Array.isArray(data.content) ? data.content.join("\n\n") : (data.content || "")
+          };
+        });
         setBlogs(blogsData);
       } catch (err) {
         console.error("Failed to fetch data:", err);
@@ -46,6 +54,7 @@ export default function AdminPage() {
         setLoading(false);
       }
     };
+
     if (isLoggedIn) {
       fetchData();
     } else {
@@ -120,8 +129,8 @@ export default function AdminPage() {
   };
 
   const handleBlogContentChange = (id: string, contentStr: string) => {
-    const contentArr = contentStr.split("\\n\\n").map(p => p.trim()).filter(p => p);
-    setBlogs((prev) => prev.map((b) => (b.id === id ? { ...b, content: contentArr } : b)));
+    // Keeps spaces intact while typing by managing it as a pure string
+    setBlogs((prev) => prev.map((b) => (b.id === id ? { ...b, content: contentStr } : b)));
   };
 
   const addBlog = async () => {
@@ -132,7 +141,7 @@ export default function AdminPage() {
         date: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
         category: "General",
         readTime: "5 min read",
-        content: ["First paragraph here..."],
+        content: "First paragraph here...", // Initialized as string
         createdAt: Date.now()
       };
       const docRef = await addDoc(blogsColRef, newBlog);
@@ -148,9 +157,22 @@ export default function AdminPage() {
   const saveBlog = async (blog: any) => {
     try {
       const blogRef = doc(db, "blogs", blog.id);
-      const { id, ...blogData } = blog; // Remove id from data to be saved
+      const { id, ...blogData } = blog; 
+
+      // Transform the clean string back into a structural array right before database payload delivery
+      if (typeof blogData.content === "string") {
+        blogData.content = blogData.content
+          .split("\n\n")
+          .map((p: string) => p.trim())
+          .filter((p: string) => p);
+      }
+
       await updateDoc(blogRef, blogData);
       setMessage("Blog saved successfully!");
+
+      // Re-convert it immediately back to string form locally to maintain active user focus state
+      setBlogs(prev => prev.map(b => b.id === blog.id ? { ...b, content: blog.content } : b));
+      
       setTimeout(() => setMessage(""), 3000);
     } catch (err) {
       console.error(err);
@@ -451,7 +473,7 @@ export default function AdminPage() {
                       <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Content (Separate paragraphs with double enter)</label>
                       <textarea
                         rows={6}
-                        value={(blog.content || []).join("\n\n")}
+                        value={blog.content || ""}
                         onChange={(e) => handleBlogContentChange(blog.id, e.target.value)}
                         className="w-full bg-[#111] border border-gray-800 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-[#9ffb2b] resize-y font-mono"
                         placeholder="First paragraph...&#10;&#10;Second paragraph..."

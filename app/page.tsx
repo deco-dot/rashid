@@ -772,7 +772,7 @@ export default function Home() {
               </div>
               <div className="form-box reveal">
                 <div className="form-title">Send a Message</div>
-                <form action="https://formspree.io/f/mojzeayk" method="POST">
+                <form action="https://formspree.io/f/mvznlwkv" method="POST">
                   <div className="form-row2">
                     <div className="fg">
                       <label className="fl" htmlFor="fn">Name</label>
