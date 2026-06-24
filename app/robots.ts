@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/_next/", "/api/"], // Prevents scraping engine assets or backend APIs
     },
-    sitemap: "https://www.rashidirfan.in/sitemap.xml", // Replace with your URL
+    sitemap: "https://www.rashidirfankc.in/sitemap.xml", // Replace with your URL
   };
 }

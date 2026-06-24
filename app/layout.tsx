@@ -17,7 +17,7 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://rashidirfan.in"), // Replace with your actual live domain URL
+  metadataBase: new URL("https://rashidirfankc.in"), // Replace with your actual live domain URL
   title: {
     default: "Rashid Irfan KC | Best Digital Marketing Freelancer in Kerala",
     template: "%s | Rashid Irfan KC",
